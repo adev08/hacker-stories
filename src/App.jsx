@@ -1,7 +1,6 @@
+import * as React from "react";
 
-import * as React from 'react';
-
-const title = 'React';
+const title = "React";
 
 function App() {
   return (
@@ -13,5 +12,4 @@ function App() {
   );
 }
 
-
-export default App
+export default App;
