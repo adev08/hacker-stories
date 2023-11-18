@@ -19,11 +19,19 @@ const App = () => {
       objectID: 1,
     },
   ];
+    
+  const handleSearch = (event) => {
+    console.log(event.target.value);
+
+     //callback handlder
+     props.onSearch(event)
+  };
+
   return (
     <div>
       <h1>My Hackers Stories</h1>
 
-      <Search />
+      <Search onSearch={handleSearch}/>
 
       <hr />
 
