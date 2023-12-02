@@ -1,5 +1,17 @@
 import * as React from "react";
 
+const useStorageState = (key, initialState) => {
+  const [value, setValue] = React.useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
+};
+
 const App = () => {
   const stories = [
     {
@@ -19,61 +31,54 @@ const App = () => {
       objectID: 1,
     },
   ];
+
+  const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const searchedStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
-      <h1>My Hackers Stories</h1>
+      <h1>My Hacker Stories</h1>
 
-      <Search />
+      <Search search={searchTerm} onSearch={handleSearch} />
 
       <hr />
 
-      <List list={stories} />
+      <List list={searchedStories} />
     </div>
   );
 };
 
-const Search = () => {
-  const [searchTerm, setSearchTerm] = React.useState('');
+const Search = ({ search, onSearch }) => (
+  <div>
+    <label htmlFor="search">Search: </label>
+    <input id="search" type="text" value={search} onChange={onSearch} />
+  </div>
+);
 
-  const handleEvent = (event) => {
-     setSearchTerm(event.target.value);
-  };
+const List = ({ list }) => (
+  <ul>
+    {list.map(({ objectID, ...item }) => (
+      <Item key={objectID} {...item} />
+    ))}
+  </ul>
+);
 
-  return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input id="search" type="text" onChange={handleEvent} />
-
-      <p>
-        Searching for <strong>{searchTerm}</strong>.
-      </p>
-    </div>
-  );
-};
-
-const List = (props) => {
-  return (
-    <div>
-      <ul>
-        {props.list.map((item) => (
-          <Item key={item.objectID} item={item} />
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-const Item = (props) => {
-  return (
-    <li>
-      <span>
-        <a href={props.item.url}>{props.item.title}</a>
-      </span>
-      <span>{props.item.author}</span>
-      <span>{props.item.num_comments}</span>
-      <span>{props.item.points}</span>
-    </li>
-  );
-};
+const Item = ({ title, url, author, num_comments, points }) => (
+  <li>
+    <span>
+      <a href={url}>{title}</a>
+    </span>
+    <span>{author}</span>
+    <span>{num_comments}</span>
+    <span>{points}</span>
+  </li>
+);
 
 export default App;
