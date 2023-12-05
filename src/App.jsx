@@ -32,7 +32,7 @@ const App = () => {
     },
   ];
 
-  const [searchTerm, setSearchTerm] = useStorageState('search', 'React');
+  const [searchTerm, setSearchTerm] = useStorageState('search', '');
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -43,7 +43,7 @@ const App = () => {
   );
 
   return (
-    <div>
+    <>
       <h1>My Hacker Stories</h1>
 
       <Search search={searchTerm} onSearch={handleSearch} />
@@ -51,7 +51,7 @@ const App = () => {
       <hr />
 
       <List list={searchedStories} />
-    </div>
+    </>
   );
 };
 
